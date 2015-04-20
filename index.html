@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="http://cooper-union-maps-proxy.herokuapp.com/js/draw.js"></script>
+
+
+    <script>
+      $(document).ready(function(){
+        //getting the data from instagram
+        $.getJSON("http://cooper-union-instagram-proxy.herokuapp.com/search/tag/nyc?count=100", function(response){
+          //create the placeholder for valid images
+          var instagramPositions = [];
+          var instagramImages = [];
+          //looping through the response from instagram
+          for(var i=0; i<response.length; i++) {
+            //Statan Island Coordinates - not using - I dont care about SI (-74.256 < longitude <-74.053) && (40.496 < latitude < 40.649))
+              if ((response[i].location != null)
+                  && (response[i].location.longitude <= -73.701 )
+                  && (response[i].location.longitude >= -74.042 )
+                  && (response[i].location.latitude <= 40.915)
+                  && (response[i].location.latitude >= 40.540)) {
+              //construct the photoMarker object
+              var photoMarker = {
+                'title': "<img src="+response[i].images.thumbnail.url+" />",
+                'map': new google.maps.LatLng(response[i].location.latitude, response[i].location.longitude),
+                'link':response[i].link,
+              }
+              //push the photoMarker object onto instagramPositions array
+              instagramPositions.push(photoMarker);
+              //create variable instagramlinks of clickable photos
+        
+              //push instagramLinks into the instagramImages array
+              instagramImages.push(photoMarker.title);
+              console.log (i)
+              console.log (response[i].location.longitude)
+    
+            } //end of "if the photo has location data"
+            else
+              console.log(i, ":(")
+          } //end of the for loop, iterating through the photos
+
+          console.log(instagramPositions.length)
+
+            var mapOptions = {
+            zoom: 12 ,
+            center: new google.maps.LatLng(40.764421, -73.915378)
+          };       
+              //draws the map with all the positions
+              draw('fullmap', mapOptions, instagramPositions);
+              //centers the maps with single positons   
+            //for loop to generate maps and to put images into a grid
+          for(var i=0; i<9; i++) { 
+            var mapname = ('map' + i)
+            //last input in draw must be an array 
+            draw(mapname, mapOptions, [instagramPositions[i]]);
+            //adds each photo into a position on the table
+            var classname = ('#' + i)
+          $(classname).append(instagramImages[i]);
+          }//end this for loop
+
+            $('#0').click(function(){
+              //adds full map on top layer
+            $("#fullmap").addClass("map"); 
+              //reveals single position map of choice 
+            $("#map0").addClass("map");
+              //hides all other maps that were not choosen
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map"); 
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+            }); //the function ends each time.
+            $('#1').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").addClass("map");
+            $("#map2").removeClass("map"); 
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+            }); 
+            $('#2').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map2").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").addClass("map");
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+            });
+            $('#3').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map3").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+             });
+            $('#4').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map4").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map3").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+             });
+              $('#5').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map5").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+             });
+            $('#6').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map6").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map7").removeClass("map");
+            $("#map8").removeClass("map");
+             });
+            $('#7').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map7").addClass("map"); 
+            $("#map0").removeClass("map");
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map8").removeClass("map");
+             });
+            $('#8').click(function(){
+            $("#fullmap").addClass("map"); 
+            $("#map8").addClass("map"); 
+            $("#map1").removeClass("map"); 
+            $("#map2").removeClass("map");
+            $("#map3").removeClass("map");
+            $("#map4").removeClass("map");
+            $("#map5").removeClass("map");
+            $("#map6").removeClass("map");
+            $("#map7").removeClass("map");
+             });
+            //removes the full map to reveal the answer underneath of it.
+             $('#answer').click(function(){
+              $("#fullmap").removeClass("map"); 
+             });
+
+      });
+      });
+    </script>
+    <style>
+
+    html {
+      background-color:#333333;
+    }
+
+      .text {
+        color:white;
+        text-align: center; 
+        font-family: 'Gill Sans',' Gill Sans MT', Calibri, sans-serif;
+        font-size: 18px;
+      }
+      #answer{
+        font-size: 30px;
+      }
+      #fullmap {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map0 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map1 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map2 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map3 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map4 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map5 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map6 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map7 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+      #map8 {
+        height:800px;
+        width:800px;
+        visibility: hidden;
+        z-index: 1;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+
+     .map#map0 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map1 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map2 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map3 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map4 {
+        visibility: visible;
+        z-index: 2;
+      }
+    .map#map5 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map6 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map7 {
+        visibility: visible;
+        z-index: 2;
+      }
+     .map#map8 {
+        visibility: visible;
+        z-index: 2;
+      }
+
+    .map#fullmap {
+       visibility: visible;
+      z-index: 3;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="map0"></div>
+    <div id="map1"></div>
+    <div id="map2"></div>
+    <div id="map3"></div>
+    <div id="map4"></div>
+    <div id="map5"></div>
+    <div id="map6"></div>
+    <div id="map7"></div>
+    <div id="map8"></div>
+    <div id="fullmap"></div>
+    <table> 
+      <thead><caption class="text">Click on a NYC photo to guess out where it was taken.</caption></thead>
+            <tbody><tr>
+            <td id="0"></td> 
+            <td id="1"></td> 
+            <td id="2"></td>
+            </tr>
+            <tr>
+            <td id="3"></td> 
+            <td id="4"></td> 
+            <td id="5"></td>
+            </tr>
+            <tr>
+            <td id="6"></td> 
+            <td id="7"></td> 
+            <td id="8"></td>
+            </tr></tbody>
+            <tfoot> <tr><td colspan="3" class = "text" id= "answer">Click here to see the answer! </td></tr></tfood>
+    </table>
+  </body>
+  </html>
